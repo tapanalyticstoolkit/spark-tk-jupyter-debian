@@ -12,13 +12,13 @@ This is the initial release of the `spark-tk-jupyter` repo.
 None.
 
 ## Building the image
-- Pull all the submodules: git submodule update --init --recursive
-- sudo docker build .
+- Pull all the submodules: `git submodule update --init --recursive`
+- `sudo docker build`
 - Or if you are behind a proxy use this:
-- sudo docker build --build-arg HTTP_PROXY=$http_proxy --build-arg HTTPS_PROXY=$http_proxy --build-arg NO_PROXY=$no_proxy --build-arg http_proxy=$http_proxy --build-arg https_proxy=$http_proxy --build-arg no_proxy=$no_proxy .
+- `sudo docker build --build-arg HTTP_PROXY=$http_proxy --build-arg HTTPS_PROXY=$http_proxy --build-arg NO_PROXY=$no_proxy --build-arg http_proxy=$http_proxy --build-arg https_proxy=$http_proxy --build-arg no_proxy=$no_proxy`
 
 ## Run the image:
-- sudo docker run -p 8900:8888 YOUR_JUPYTER_IMAGE_TAG
+- `sudo docker run -p 8900:8888 YOUR_JUPYTER_IMAGE_TAG`
 
 ##Features
 
