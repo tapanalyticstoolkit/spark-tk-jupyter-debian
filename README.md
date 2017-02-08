@@ -1,9 +1,15 @@
 
-#jupyter
+#spark-tk-jupyter
 
-- This is the home of docker image for Jupyter on TAP. 
+- This is the home of docker image for Jupyter for the TAP Analytics Toolkit (TAP). 
 - The final images contains pandas-cookbook example notebooks from this repository:
 https://github.com/jvns/pandas-cookbook
+
+##What's new
+This is the initial release of the `spark-tk-jupyter` repo.
+
+##Known issues
+None.
 
 ## Building the image
 - Pull all the submodules: git submodule update --init --recursive
@@ -27,8 +33,8 @@ https://github.com/jvns/pandas-cookbook
 ## REST API's provided
 
 ### /upload
-- currently the only way to upload files to Jupyter is using the upload Form.
-    after each attemp to upload the file(s) are loaded into a directory format like "uploads/dddd" where d is a digit.
+- currently the only way to upload files to Jupyter is using the **Upload** Form.
+    after each attempt to upload, the file(s) are loaded into a directory format like "uploads/dddd" where d is a digit.
 
 - curl http://JUPYTER_NOTEBOOK_URL/upload -F "filearg=@/home/ashahba/frame-basics.py"
 - curl http://JUPYTER_NOTEBOOK_URL/upload -F "filearg=@/home/ashahba/frame-basics.py" -F "filearg=@/home/ashahba/frame-advanced.py"
