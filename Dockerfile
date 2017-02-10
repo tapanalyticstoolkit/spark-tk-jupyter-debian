@@ -45,8 +45,8 @@ CMD ["java"]
 
 # Install Tini
 ARG TINI_VERSION="v0.13.0"
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/
-RUN chmod +x /usr/bin/tini
+RUN wget -q --no-check-certificate https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -P /usr/bin/ && \
+    chmod +x /usr/bin/tini
 
 
 # Create vcap user with UID=1000 and in the 'users' group
@@ -92,6 +92,8 @@ CMD ["start-notebook.sh"]
 
 # Copy all files before switching users
 COPY assets/tapmenu/ $HOME/tapmenu
+
+
 # Install Python 2 packages and kernel spec
 RUN \
     conda install --yes \
@@ -117,9 +119,6 @@ RUN apt-get purge -y 'python3.4*' && \
     
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
-
-
-######### End of Jupyter Base ##########
 
 
 # Install Spark dependencies
@@ -192,7 +191,6 @@ ARG TKLIBS_INSTALLER="daal-install"
 
 
 # Install spark-tk/daal-tk packages
-#ADD $TKLIBS_INSTALLER_URL /usr/local/
 RUN cd /usr/local && \ 
     wget -q --no-check-certificate $TKLIBS_INSTALLER_URL && \
     chmod +x $TKLIBS_INSTALLER  && \
