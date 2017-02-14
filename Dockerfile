@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:jessie-backports
 
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -11,13 +11,15 @@ RUN sed -i 's/$/ contrib/g' /etc/apt/sources.list
 RUN \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -yq --no-install-recommends --fix-missing \
+    apt-get install -t jessie-backports -yq --no-install-recommends --fix-missing \
     bzip2 \
     locales \
     tar \
     unzip \
     vim.tiny \
-    wget
+    wget \
+    openjdk-8-jre-headless \
+    openjdk-8-jdk
 
 
 # Setup en_US locales to handle non-ASCII characters correctly
@@ -30,23 +32,14 @@ RUN \
     locale-gen
 
 
-# Add jessie-backports repository to install JDK 1.8
-RUN \
-    echo "===> add jessie-backports repository ..." && \
-    echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/openjdk-8-jdk.list && \
-    apt-get update && \
-    echo "===> install Java" && \
-    apt-get install -t jessie-backports -yq --no-install-recommends --fix-missing openjdk-8-jre-headless ca-certificates-java openjdk-8-jdk
-
-
 # define default command
 CMD ["java"]
 
 
 # Install Tini
 ARG TINI_VERSION="v0.13.0"
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /usr/bin/
-RUN chmod +x /usr/bin/tini
+RUN wget -q --no-check-certificate https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini -P /usr/bin/ && \
+    chmod +x /usr/bin/tini
 
 
 # Create vcap user with UID=1000 and in the 'users' group
@@ -92,6 +85,8 @@ CMD ["start-notebook.sh"]
 
 # Copy all files before switching users
 COPY assets/tapmenu/ $HOME/tapmenu
+
+
 # Install Python 2 packages and kernel spec
 RUN \
     conda install --yes \
@@ -117,9 +112,6 @@ RUN apt-get purge -y 'python3.4*' && \
     
 
 RUN mkdir -p $HOME/.jupyter/nbconfig
-
-
-######### End of Jupyter Base ##########
 
 
 # Install Spark dependencies
@@ -192,7 +184,6 @@ ARG TKLIBS_INSTALLER="daal-install"
 
 
 # Install spark-tk/daal-tk packages
-#ADD $TKLIBS_INSTALLER_URL /usr/local/
 RUN cd /usr/local && \ 
     wget -q --no-check-certificate $TKLIBS_INSTALLER_URL && \
     chmod +x $TKLIBS_INSTALLER  && \
