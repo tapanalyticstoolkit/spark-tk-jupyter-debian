@@ -150,10 +150,14 @@ CMD ["/usr/local/bin/jupyter-startup.sh"]
 RUN mkdir -p $HOME/.jupyter/nbconfig
 
 
+# INSTALL PIP
+RUN wget -nv https://bootstrap.pypa.io/get-pip.py -P /tmp/
+RUN python /tmp/get-pip.py
+
+
 # Install Python 2 packages and kernel spec
 RUN \
     conda install --yes \
-    'pip>=9.0.1' \
     'freetype' \
     'matplotlib>=1.5*' \
     'nomkl' \
@@ -169,10 +173,6 @@ RUN \
 # Install Python 2 kernelspec into conda environment
 COPY jupyter-default-notebooks/notebooks $HOME/jupyter
 RUN $CONDA_DIR/bin/python -m ipykernel.kernelspec --prefix=$CONDA_DIR
-
-
-# Create a symbolick link for pip2.7 between now and upgrade to Python3
-RUN ln -s $CONDA_DIR/bin/pip $CONDA_DIR/bin/pip2.7
 
 
 # Set required paths for spark-tk/daal-tk packages
@@ -192,13 +192,6 @@ RUN cd /usr/local && \
     ln -s /usr/local/sparktk-core-* $SPARKTK_HOME && \
     ln -s /usr/local/daaltk-core-* $DAALTK_HOME && \
     rm -rf /usr/local/$TKLIBS_INSTALLER /usr/local/*.tar.gz
-
-
-# Install spark-tk package mainly to fix the graphframes install
-RUN cd $SPARKTK_HOME && \
-    chmod +x install.sh && \
-    sync && \
-    ./install.sh
 
 
 # copy misc modules for TAP to python2.7 site-packages
