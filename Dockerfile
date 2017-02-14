@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM debian:jessie-backports
 
 
 ENV DEBIAN_FRONTEND noninteractive
@@ -11,13 +11,15 @@ RUN sed -i 's/$/ contrib/g' /etc/apt/sources.list
 RUN \
     apt-get update && \
     apt-get -y upgrade && \
-    apt-get install -yq --no-install-recommends --fix-missing \
+    apt-get install -t jessie-backports -yq --no-install-recommends --fix-missing \
     bzip2 \
     locales \
     tar \
     unzip \
     vim.tiny \
-    wget
+    wget \
+    openjdk-8-jre-headless \
+    openjdk-8-jdk
 
 
 # Setup en_US locales to handle non-ASCII characters correctly
@@ -28,15 +30,6 @@ ENV dpkg-reconfigure locales
 RUN \
     echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
     locale-gen
-
-
-# Add jessie-backports repository to install JDK 1.8
-RUN \
-    echo "===> add jessie-backports repository ..." && \
-    echo "deb http://ftp.debian.org/debian jessie-backports main" | tee /etc/apt/sources.list.d/openjdk-8-jdk.list && \
-    apt-get update && \
-    echo "===> install Java" && \
-    apt-get install -t jessie-backports -yq --no-install-recommends --fix-missing openjdk-8-jre-headless ca-certificates-java openjdk-8-jdk
 
 
 # define default command
