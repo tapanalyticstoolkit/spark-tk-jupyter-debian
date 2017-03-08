@@ -1,8 +1,8 @@
 
 #spark-tk-jupyter
 
-- This is the home of the docker image for Jupyter for the TAP Analytics Toolkit (ATK). 
-- The final images contain pandas-cookbook example notebooks from this repository:
+- Docker image for Spark-tk in a Jupyter notebook. 
+- Contain pandas-cookbook example notebooks from this repository:
 https://github.com/jvns/pandas-cookbook
 
 ##What's new
